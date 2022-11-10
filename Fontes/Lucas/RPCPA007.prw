@@ -93,6 +93,16 @@ Return oModel
 
 Static Function ViewDef()
 	Local oModel := FWLoadModel("zPCPMD3")
+
+	// Campos no Browse:
+	// (DOCUMENTO) 
+	// Doc. Forecast, Versão, Ano Base, Mês Base, Produto, Saldo Atual
+	// (Budget Mensais Lavra - Lista do que será planejado)
+	// Doc Budget Mensal, Realce, %Teor, %Rec., Metal, Qtd Massa, Saldo Remanescente
+	// (Plan. Massa Produção)
+	// Realce, Dia 01, Dia 02, Dia 03, ..., Dia 31
+	// (Plan. Atividade/Serviço)
+	// Realce, Seq, Atividade, Unid. Med., Prop/Terc, Dia 01, Dia 02, ... Dia 31, Qtd. Minério, Qtd. Esteril, CAPEX/OPEX
 	Local cCampoZPA := ''
 	Local cCampoZPB := ''
 	Local cCampoZPC := ''
