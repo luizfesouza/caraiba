@@ -3,19 +3,13 @@
 #Include "FWMVCDef.ch"
 
 //Variveis Estaticas
-Static cTitulo := "Cadastro de Planejamento da Producao Beneficiamento"
+Static cTitulo := "Forecast da Lavra"
 Static cTabPai := "ZPA"
 Static cTabFilho := "ZPB"
 Static cTabFilho2 := "ZPC"
 Static cTabFilho3 := "ZPD"
 
-
-/*/
-Cadastro customizado de Planejamento da Produção do Beneficiamento
-@author Eloi
-/*/
-
-User Function zPCPMD3()
+User Function RPCPA007()
 	Local aArea   := FWGetArea()
 	Local oBrowse
 	Private aRotina := {}
@@ -39,10 +33,10 @@ Static Function MenuDef()
 	Local aRotina := {}
 
 	//Adicionando opcoes do menu
-	ADD OPTION aRotina TITLE "Visualizar" ACTION "VIEWDEF.zPCPMD3" OPERATION 1 ACCESS 0
-	ADD OPTION aRotina TITLE "Incluir" ACTION "VIEWDEF.zPCPMD3" OPERATION 3 ACCESS 0
-	ADD OPTION aRotina TITLE "Alterar" ACTION "VIEWDEF.zPCPMD3" OPERATION 4 ACCESS 0
-	ADD OPTION aRotina TITLE "Excluir" ACTION "VIEWDEF.zPCPMD3" OPERATION 5 ACCESS 0
+	ADD OPTION aRotina TITLE "Visualizar" ACTION "VIEWDEF.RPCPA007" OPERATION 1 ACCESS 0
+	ADD OPTION aRotina TITLE "Incluir" ACTION "VIEWDEF.RPCPA007" OPERATION 3 ACCESS 0
+	ADD OPTION aRotina TITLE "Alterar" ACTION "VIEWDEF.RPCPA007" OPERATION 4 ACCESS 0
+	ADD OPTION aRotina TITLE "Excluir" ACTION "VIEWDEF.RPCPA007" OPERATION 5 ACCESS 0
 
 Return aRotina
 
@@ -65,7 +59,6 @@ Static Function ModelDef()
 	oModel := MPFormModel():New("RPCPA007M", bPre, bPos, bCommit, bCancel)
 	
     oModel:AddFields("ZPAMASTER", /*cOwner*/, oStruPai)
-	
 	oModel:AddGrid("ZPBDETAIL","ZPAMASTER",oStruFilho,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 	oModel:AddGrid("ZPCDETAIL","ZPAMASTER",oStruFilho2,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 	oModel:AddGrid("ZPDDETAIL","ZPAMASTER",oStruFilho3,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
@@ -73,13 +66,16 @@ Static Function ModelDef()
 
     oModel:SetDescription("Modelo de dados - " + cTitulo)
 	oModel:GetModel("ZPAMASTER"):SetDescription( "Dados de - " + cTitulo)
-
 	oModel:GetModel("ZPBDETAIL"):SetDescription( "Grid de - " + cTitulo)
     oModel:GetModel("ZPCDETAIL"):SetDescription( "Grid de - " + cTitulo)
     oModel:GetModel("ZPDDETAIL"):SetDescription( "Grid de - " + cTitulo)
-
 	oModel:SetPrimaryKey({})
 
+	// PAI: ZPA
+	// FILHO1: ZPB
+	// FILHO2: ZPC
+	// FILHO3: ZPD
+	
 	//Fazendo o relacionamento
 	aAdd(aRelation, {"ZPB_FILIAL", "FWxFilial('ZPB')"} )
 	aAdd(aRelation, {"ZPB_DOCFL", "ZPC_DOCFL"})
