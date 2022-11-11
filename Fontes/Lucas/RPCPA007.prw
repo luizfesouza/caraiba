@@ -41,10 +41,10 @@ Static Function MenuDef()
 Return aRotina
 
 Static Function ModelDef()
-	Local oStruPai := FWFormStruct(1, cTabPai)
-	Local oStruFilho := FWFormStruct(1, cTabFilho)
-    Local oStruFilho2 := FWFormStruct(1, cTabFilho2)
-    Local oStruFilho3 := FWFormStruct(1, cTabFilho3)
+	Local oStruPai := FWFormStruct(1, cTabPai) // ZPA
+	Local oStruFilho := FWFormStruct(1, cTabFilho) // ZPB
+    Local oStruFilho2 := FWFormStruct(1, cTabFilho2) // ZPC
+    Local oStruFilho3 := FWFormStruct(1, cTabFilho3) // ZPD
 	Local aRelation := {}
 	Local aRelation2 := {}
     Local aRelation3 := {}
@@ -92,7 +92,7 @@ Static Function ModelDef()
 Return oModel
 
 Static Function ViewDef()
-	Local oModel := FWLoadModel("zPCPMD3")
+	Local oModel := FWLoadModel("RPCPA007M")
 
 	// Campos no Browse:
 	// (DOCUMENTO) 
