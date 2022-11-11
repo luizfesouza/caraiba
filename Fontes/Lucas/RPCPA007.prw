@@ -83,11 +83,11 @@ Static Function ModelDef()
 
 	aAdd(aRelation2, {"", "FWxFilial('')"} )
 	aAdd(aRelation2, {"", ""})
-	oModel:SetRelation("", aRelation2, ->(IndexKey(1)))
+	//oModel:SetRelation("", aRelation2, ->(IndexKey(1)))
     
     aAdd(aRelation3, {"", "FWxFilial('')"} )
 	aAdd(aRelation3, {"", ""})
-	oModel:SetRelation("", aRelation3, ->(IndexKey(1)))
+	//oModel:SetRelation("", aRelation3, ->(IndexKey(1)))
 
 Return oModel
 
@@ -107,7 +107,6 @@ Static Function ViewDef()
 	Local cCampoZPB := ''
 	Local cCampoZPC := ''
     Local cCampoZPD := ''
-
 	
 	Local oStruPai := FWFormStruct(2, cTabPai , {|cCampo| .NOT. AllTrim(cCampo) $ cCampoZPA})
 	Local oStruFilho := FWFormStruct(2, cTabFilho, {|cCampo1|  .NOT. AllTrim(cCampo1) $ cCampoZPB})
@@ -132,17 +131,12 @@ Static Function ViewDef()
 	oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO002', 'Planejamento Producao')
     oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO002', 'Planejamento Producao')
 
-
 	oView:CreateHorizontalBox('ITENS_FILHO01', 100,,, 'PASTA_FILHOS', 'ABA_FILHO001')
 	oView:CreateHorizontalBox('ITENS_FILHO02', 100,,, 'PASTA_FILHOS', 'ABA_FILHO002')
 
 	oView:SetOwnerView("VIEW_ZPE", "CABEC")
 	oView:SetOwnerView("VIEW_ZPF", "ITENS_FILHO01")
     oView:SetOwnerView("VIEW_ZP9", "ITENS_FILHO02")
-
-
-
-
 
 	//Adicionando campo incremental na grid
 	oView:AddIncrementField("VIEW_ZPF", "ZPF_FILBML")
