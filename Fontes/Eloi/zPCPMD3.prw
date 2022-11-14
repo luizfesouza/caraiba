@@ -5,13 +5,15 @@
 
 //Variveis Estaticas
 Static cTitulo := "Cadastro de Planejamento da Producao Beneficiamento"
-Static cTabPai := "ZPE"
-Static cTabFilho := "ZPF"
-Static cTabFilho2 := "ZP9"
+Static cTabPai := "ZPA"
+Static cTabFilho := "ZPB"
+Static cTabFilho2 := "ZPC"
 
 /*/
 Cadastro customizado de Planejamento da Produção do Beneficiamento
 @author Eloi
+@author Lucas
+@author Luis
 /*/
 
 User Function ZPCPMD3()
@@ -50,7 +52,7 @@ Static Function ModelDef()
 
 	Local oStruPai := FWFormStruct(1, cTabPaI)   
 	Local oStruFilho := FWFormStruct(1, cTabFilho)
-    Local oStruZP9 := FWFormStruct(1, cTabFilho2)
+    Local oStruZPC := FWFormStruct(1, cTabFilho2)
 	Local aRelation := {}
 	Local aRelation2 := {}
 	Local oModel
@@ -62,47 +64,47 @@ Static Function ModelDef()
 
 	//Cria o modelo de dados para cadastro
 	oModel := MPFormModel():New("ZPCPMD3M", bPre, bPos, bCommit, bCancel)
-	oModel:AddFields("ZPEMASTER", /*cOwner*/, oStruPai)
+	oModel:AddFields("ZPAMASTER", /*cOwner*/, oStruPai)
 	
-	oModel:AddGrid("ZPFDETAIL","ZPEMASTER",oStruFilho,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
-	oModel:AddGrid("ZP9DETAIL","ZPFDETAIL",oStruZP9,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
+	oModel:AddGrid("ZPBDETAIL","ZPAMASTER",oStruFilho,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
+	oModel:AddGrid("ZPCDETAIL","ZPBDETAIL",oStruZPC,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 	
 	oModel:SetDescription("Modelo de dados - " + cTitulo)
 	
-	oModel:GetModel("ZPEMASTER"):SetDescription( "Dados de - " + cTitulo)
-	oModel:GetModel("ZPFDETAIL"):SetDescription( "Grid de - " + cTitulo)
-	oModel:GetModel("ZP9DETAIL"):SetDescription( "Grid de - " + cTitulo)
+	oModel:GetModel("ZPAMASTER"):SetDescription( "Dados de - " + cTitulo)
+	oModel:GetModel("ZPBDETAIL"):SetDescription( "Grid de - " + cTitulo)
+	oModel:GetModel("ZPCDETAIL"):SetDescription( "Grid de - " + cTitulo)
 	oModel:SetPrimaryKey({})
 
 	// //Fazendo o relacionamento
-	aAdd(aRelation, {"ZPF_FILIAL", "FWxFilial('ZPF')"} )
-	aAdd(aRelation, {"ZPF_DOCFB", "ZPE_DOCFB"})
-	oModel:SetRelation("ZPFDETAIL", aRelation, ZPF->(IndexKey(1)))
+	aAdd(aRelation, {"ZPB_FILIAL", "FWxFilial('ZPB')"} )
+	aAdd(aRelation, {"ZPB_DOCFB", "ZPA_DOCFB"})
+	oModel:SetRelation("ZPBDETAIL", aRelation, ZPB->(IndexKey(1)))
 
-	aAdd(aRelation2, {"ZP9_FILIAL", "FWxFilial('ZP9')"} )
-	aAdd(aRelation2, {"ZP9_DOCBMB", "ZPE_DOCBMB"})
-	aAdd(aRelation2, {"ZP9_FILBML", "ZPF_FILBML"})
-	aAdd(aRelation2, {"ZP9_DOCBML", "ZPF_DOCBML"})
-	oModel:SetRelation("ZP9DETAIL", aRelation2, ZP9->(IndexKey(1)))
+	aAdd(aRelation2, {"ZPC_FILIAL", "FWxFilial('ZPC')"} )
+	aAdd(aRelation2, {"ZPC_DOCBMB", "ZPA_DOCBMB"})
+	aAdd(aRelation2, {"ZPC_FILBML", "ZPB_FILBML"})
+	aAdd(aRelation2, {"ZPC_DOCBML", "ZPB_DOCBML"})
+	oModel:SetRelation("ZPCDETAIL", aRelation2, ZPC->(IndexKey(1)))
 
 Return oModel
 
 Static Function ViewDef()
 	Local oModel := FWLoadModel("ZPCPMD3")
 
-	// ZP9_QTBD01       
+	// , cTabFilho2, {|cCampo2|   AllTrim(cCampo2) $ "ZPC_FILBML,ZPC_DOCBML,ZPC_REALCE,ZPC_QTD" }      
 
-	Local oStruPai := FWFormStruct(2, cTabPai, {|cCampo| .NOT. AllTrim(cCampo) $ "ZPE_DTFEC,ZPE_OP,ZPE_DTEXEC"})   
-	Local oStruFilho := FWFormStruct(2, cTabFilho, {|cCampo1|  AllTrim(cCampo1) $ "ZPF_FILBML,ZPF_DOCBML,ZPF_REALCE,ZPF_QTDLVR,ZPF_TEOR,ZPF_REC,ZPF_METAL,ZPF_DOCBML"})
-    Local oStruZP9 := FWFormStruct(2, cTabFilho2, {|cCampo2|   AllTrim(cCampo2) $ "ZP9_FILBML,ZP9_DOCBML,ZP9_REALCE,ZP9_QTD" })
+	Local oStruPai := FWFormStruct(2)   
+	Local oStruFilho := FWFormStruct(2)
+    Local oStruZPC := FWFormStruct(2)
 	//Cria a visualizacao do cadastro
 	oView := FWFormView():New()
 	oView:SetModel(oModel)
 	 
-	oView:AddField("VIEW_ZPE", oStruPai, "ZPEMASTER")
+	oView:AddField("VIEW_ZPA", oStruPai, "ZPAMASTER")
 
-	oView:AddGrid("VIEW_ZPF",  oStruFilho,  "ZPFDETAIL")
-	oView:AddGrid("VIEW_ZP9",  oStruZP9,  "ZP9DETAIL")
+	oView:AddGrid("VIEW_ZPB",  oStruFilho,  "ZPBDETAIL")
+	oView:AddGrid("VIEW_ZPC",  oStruZPC,  "ZPCDETAIL")
 
 	//Partes da tela
 	oView:CreateHorizontalBox("CABEC", 28)
@@ -110,18 +112,17 @@ Static Function ViewDef()
 	oView:CreateHorizontalBox("GRID1", 36)
 
 
-	oView:SetOwnerView("VIEW_ZPE", "CABEC")
+	oView:SetOwnerView("VIEW_ZPA", "CABEC")
 
-	oView:SetOwnerView("VIEW_ZPF", "GRID")
-    oView:SetOwnerView("VIEW_ZP9", "GRID1")
+	oView:SetOwnerView("VIEW_ZPB", "GRID")
+    oView:SetOwnerView("VIEW_ZPC", "GRID1")
 
-	oView:EnableTitleView("VIEW_ZPE", "Cabecalho ")
-	oView:EnableTitleView("VIEW_ZPF", "Budget Mensal Lavra (Lista Passiva de Planejamento do Beneficiamento)")
-	oView:EnableTitleView("VIEW_ZP9", "Planejamento Producao")
+	oView:EnableTitleView("VIEW_ZPA", "Documento ")
+	oView:EnableTitleView("VIEW_ZPB", "Budget Mensais Lavra (Lista que sera planejado)")
+	oView:EnableTitleView("VIEW_ZPC", "Plan.Massa Producao")
 
 
 	//Adicionando campo incremental na grid
 Return oView
 
 
-//oStZP5:AddField('ZP5_LEGEND, "00", AllTrim( ''    ), AllTrim( '' ), { 'Legenda' }, 'C', '@BMP', NIL,'',.F.,NIL,NIL,NIL,NIL     , NIL     , .T.     ,NIL     ,NIL     )
