@@ -68,11 +68,16 @@ Static Function ModelDef()
 	oModel:GetModel("ZP9DETAIL"):SetDescription( "Grid de - " + cTitulo)
 	oModel:SetPrimaryKey({})
 
-	//Fazendo o relacionamento
+
+	// PAI: ZPE
+	// Filho1: ZPF
+	// Filho2: ZP9
+	//Fazendo o relacionamento ZPF->ZPE
 	aAdd(aRelation, {"ZPF_FILIAL", "FWxFilial('ZPF')"} )
 	aAdd(aRelation, {"ZPF_DOCFB", "ZPE_DOCFB"})
 	oModel:SetRelation("ZPFDETAIL", aRelation, ZPF->(IndexKey(1)))
 
+	// ZP9->ZPE
 	aAdd(aRelation2, {"ZP9_FILIAL", "FWxFilial('ZP9')"} )
 	aAdd(aRelation2, {"ZP9_DOCBMB", "ZPE_DOCFB"})
 	oModel:SetRelation("ZP9DETAIL", aRelation2, ZP9->(IndexKey(1)))
