@@ -7,7 +7,7 @@ Static cTitulo := "Forecast da Lavra"
 Static cTabPai := "ZPA"
 Static cTabFilho := "ZPB"
 Static cTabFilho2 := "ZPC"
-Static cTabFilho3 := "ZPD"
+// Static cTabFilho3 := "ZPD"
 
 User Function RPCPA007()
 	Local aArea   := FWGetArea()
@@ -44,10 +44,10 @@ Static Function ModelDef()
 	Local oStruPai := FWFormStruct(1, cTabPai) // ZPA
 	Local oStruFilho := FWFormStruct(1, cTabFilho) // ZPB
     Local oStruFilho2 := FWFormStruct(1, cTabFilho2) // ZPC
-    Local oStruFilho3 := FWFormStruct(1, cTabFilho3) // ZPD
+    // Local oStruFilho3 := FWFormStruct(1, cTabFilho3) // ZPD
 	Local aRelation := {}
 	Local aRelation2 := {}
-    Local aRelation3 := {}
+    // Local aRelation3 := {}
 	Local oModel
 	Local bPre := Nil
 	Local bPos := Nil
@@ -61,14 +61,14 @@ Static Function ModelDef()
     oModel:AddFields("ZPAMASTER", /*cOwner*/, oStruPai)
 	oModel:AddGrid("ZPBDETAIL","ZPAMASTER",oStruFilho,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 	oModel:AddGrid("ZPCDETAIL","ZPAMASTER",oStruFilho2,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
-	oModel:AddGrid("ZPDDETAIL","ZPAMASTER",oStruFilho3,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
+	// oModel:AddGrid("ZPDDETAIL","ZPAMASTER",oStruFilho3,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 
 
     oModel:SetDescription("Modelo de dados - " + cTitulo)
 	oModel:GetModel("ZPAMASTER"):SetDescription( "Dados de - " + cTitulo)
 	oModel:GetModel("ZPBDETAIL"):SetDescription( "Grid de - " + cTitulo)
     oModel:GetModel("ZPCDETAIL"):SetDescription( "Grid de - " + cTitulo)
-    oModel:GetModel("ZPDDETAIL"):SetDescription( "Grid de - " + cTitulo)
+    // oModel:GetModel("ZPDDETAIL"):SetDescription( "Grid de - " + cTitulo)
 	oModel:SetPrimaryKey({})
 
 	// PAI: ZPA
@@ -76,23 +76,25 @@ Static Function ModelDef()
 	// FILHO2: ZPC
 	// FILHO3: ZPD
 	
-	//Fazendo o relacionamento
+	// Fazendo o relacionamento
 	aAdd(aRelation, {"ZPB_FILIAL", "FWxFilial('ZPB')"} )
+	aAdd(aRelation, {"ZPA_DOCFL", "ZPB_DOCFL"})
 	aAdd(aRelation, {"ZPB_DOCFL", "ZPC_DOCFL"})
+	aAdd(aRelation, {"ZPA_VER", "ZPB_VER"})
 	oModel:SetRelation("ZPBDETAIL", aRelation, ZPB->(IndexKey(1)))
 
-	aAdd(aRelation2, {"", "FWxFilial('')"} )
-	aAdd(aRelation2, {"", ""})
-	//oModel:SetRelation("", aRelation2, ->(IndexKey(1)))
+	aAdd(aRelation2, {"ZPC_FILIAL", "FWxFilial('ZPC')"} )
+	// aAdd(aRelation2, {"ZPC_DOCFL", "ZPD_DOCFL"})
+	oModel:SetRelation("ZPCDETAIL", aRelation2, ZPC->(IndexKey(1)))
     
-    aAdd(aRelation3, {"", "FWxFilial('')"} )
-	aAdd(aRelation3, {"", ""})
-	//oModel:SetRelation("", aRelation3, ->(IndexKey(1)))
+    // aAdd(aRelation3, {"ZPD_FILIAL", "FWxFilial('ZPD')"} )
+	// aAdd(aRelation3, {"ZPD_DOCFL", "ZPC_DOCFL"})
+	// oModel:SetRelation("", aRelation3, ZPD->(IndexKey(1)))
 
 Return oModel
 
 Static Function ViewDef()
-	Local oModel := FWLoadModel("RPCPA007M")
+	Local oModel := FWLoadModel("RPCPA007")
 
 	// Campos no Browse:
 	// (DOCUMENTO) 
@@ -103,23 +105,25 @@ Static Function ViewDef()
 	// Realce, Dia 01, Dia 02, Dia 03, ..., Dia 31
 	// (Plan. Atividade/Serviço)
 	// Realce, Seq, Atividade, Unid. Med., Prop/Terc, Dia 01, Dia 02, ... Dia 31, Qtd. Minério, Qtd. Esteril, CAPEX/OPEX
-	Local cCampoZPA := ''
-	Local cCampoZPB := ''
-	Local cCampoZPC := ''
-    Local cCampoZPD := ''
+	// Local cCampoZPA := ''
+	// Local cCampoZPB := ''
+	// Local cCampoZPC := ''
+    // Local cCampoZPD := ''
 	
-	Local oStruPai := FWFormStruct(2, cTabPai , {|cCampo| .NOT. AllTrim(cCampo) $ cCampoZPA})
-	Local oStruFilho := FWFormStruct(2, cTabFilho, {|cCampo1|  .NOT. AllTrim(cCampo1) $ cCampoZPB})
-	Local oStruFilho2 := FWFormStruct(2, cTabFilho2, {|cCampo2| .NOT. AllTrim(cCampo2) $ cCampoZPC})
-    Local oStruFilho3 := FWFormStruct(2, cTabFilho3, {|cCampo3| .NOT. AllTrim(cCampo3) $ cCampoZPD})
+	// Local oStruPai := FWFormStruct(2, cTabPai , {|cCampo| .NOT. AllTrim(cCampo) $ cCampoZPA})
+	Local oStruPai := FWFormStruct(2, cTabPai )
+	Local oStruFilho := FWFormStruct(2, cTabFilho)
+	Local oStruFilho2 := FWFormStruct(2, cTabFilho2)
+    // Local oStruFilho3 := FWFormStruct(2, cTabFilho3)
 	Local oView
 
 	//Cria a visualizacao do cadastro
 	oView := FWFormView():New()
 	oView:SetModel(oModel)
-	oView:AddField("VIEW_ZPE", oStruPai, "ZPEMASTER")
-	oView:AddGrid("VIEW_ZPF",  oStruFilho,  "ZPFDETAIL")
-	oView:AddGrid("VIEW_ZP9",  oStruFilho2,  "ZP9DETAIL")
+	oView:AddField("VIEW_ZPA", oStruPai, "ZPAMASTER")
+	oView:AddGrid("VIEW_ZPB",  oStruFilho,  "ZPBDETAIL")
+	oView:AddGrid("VIEW_ZPC",  oStruFilho2,  "ZPCDETAIL")
+	// oView:AddGrid("VIEW_ZPD",  oStruFilho3,  "ZPDDETAIL")
 
 	//Partes da tela
 	oView:CreateHorizontalBox("CABEC", 30)
@@ -127,18 +131,20 @@ Static Function ViewDef()
 
 	oView:CreateFolder('PASTA_FILHOS', 'GRID')
 
-	oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO001', 'Budget Mensal Lavra (Lista Passiva de Planejamento do Beneficiamento)')
-	oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO002', 'Planejamento Producao')
-    oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO002', 'Planejamento Producao')
+	oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO001', 'Budget Mensal Lavra (Lista que será planejado)')
+	oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO002', 'Plan. Massa Producao')
+    // oView:AddSheet('PASTA_FILHOS', 'ABA_FILHO003', 'Plan. Ativ/Serviço')
 
 	oView:CreateHorizontalBox('ITENS_FILHO01', 100,,, 'PASTA_FILHOS', 'ABA_FILHO001')
 	oView:CreateHorizontalBox('ITENS_FILHO02', 100,,, 'PASTA_FILHOS', 'ABA_FILHO002')
+	// oView:CreateHorizontalBox('ITENS_FILHO03', 100,,, 'PASTA_FILHOS', 'ABA_FILHO003')
 
-	oView:SetOwnerView("VIEW_ZPE", "CABEC")
-	oView:SetOwnerView("VIEW_ZPF", "ITENS_FILHO01")
-    oView:SetOwnerView("VIEW_ZP9", "ITENS_FILHO02")
+	oView:SetOwnerView("VIEW_ZPA", "CABEC")
+	oView:SetOwnerView("VIEW_ZPB", "ITENS_FILHO01")
+    oView:SetOwnerView("VIEW_ZPC", "ITENS_FILHO02")
+	// oView:SetOwnerView("VIEW_ZPD", "ITENS_FILHO03")
 
 	//Adicionando campo incremental na grid
-	oView:AddIncrementField("VIEW_ZPF", "ZPF_FILBML")
+	//oView:AddIncrementField("VIEW_ZPF", "ZPF_FILBML")
 
 Return oView
