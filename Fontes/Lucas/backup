@@ -1,18 +1,17 @@
 //Bibliotecas
-#include 'parmtype.ch'
-#Include 'Protheus.ch'
-#Include 'FWMVCDef.ch'
-#INCLUDE "TOPCONN.CH"
+//CAMPO VIRTUAL / POSICIONE
+#Include "Totvs.ch"
+#Include "FWMVCDef.ch"
 
 //Variveis Estaticas
-Static cTitulo := "Cadastro de Planejamento da Produção Da Lavra"
+Static cTitulo := "Cadastro de Planejamento da ProduÃ§Ã£o Da Lavra"
 Static cTabPai := "ZPA"
 Static cTabFilho := "ZPB"
 Static cTabFilho2 := "ZPC"
-Static cTabFilho3 := "ZPD"
+//Static cTabFilho3 := "ZPD"
 
 /*/
-Cadastro customizado de Planejamento da Produção do Beneficiamento da Lavra
+Cadastro customizado de Planejamento da ProduÃ§Ã£o do Beneficiamento da Lavra
 @author Eloi
 @author Lucas
 @author Luis
@@ -52,7 +51,7 @@ Static Function ModelDef()
 	Local oStruPai := FWFormStruct(1, cTabPai)   
 	Local oStruFilho := FWFormStruct(1, cTabFilho)
     Local oStruZPC := FWFormStruct(1, cTabFilho2)
-	Local oStruZPD := FWFormStruct(1, cTabFilho3)
+	//Local oStruZPD := FWFormStruct(1, cTabFilho3)
 	Local aRelation := {}
 	Local aRelation2 := {}
 	Local aRelation3 := {}
@@ -63,18 +62,18 @@ Static Function ModelDef()
 	Local bCancel := Nil
 
 	//Cria o modelo de dados para cadastro
-	oModel := MPFormModel():New("RPCPA07", bPre, bPos, bCommit, bCancel)// obs.: nomear modelo (cID) até 7 char
+	oModel := MPFormModel():New("RPCPA007M", bPre, bPos, bCommit, bCancel)
 	oModel:AddFields("ZPAMASTER", /*cOwner*/, oStruPai)
 	oModel:AddGrid("ZPBDETAIL","ZPAMASTER",oStruFilho,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 	oModel:AddGrid("ZPCDETAIL","ZPBDETAIL",oStruZPC,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
-	oModel:AddGrid("ZPDDETAIL","ZPCDETAIL",oStruZPD,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
+	//oModel:AddGrid("ZPDDETAIL","ZPCDETAIL",oStruZPD,/*bLinePre*/, /*bLinePost*/,/*bPre - Grid Inteiro*/,/*bPos - Grid Inteiro*/,/*bLoad - Carga do modelo manualmente*/)
 
 	oModel:SetDescription("Modelo de dados - " + cTitulo)
 	
 	oModel:GetModel("ZPAMASTER"):SetDescription( "Dados de - " + cTitulo)
 	oModel:GetModel("ZPBDETAIL"):SetDescription( "Grid de - " + cTitulo)
 	oModel:GetModel("ZPCDETAIL"):SetDescription( "Grid de - " + cTitulo)
-	oModel:GetModel("ZPDDETAIL"):SetDescription( "Grid de - " + cTitulo)
+	//oModel:GetModel("ZPDDETAIL"):SetDescription( "Grid de - " + cTitulo)
 	oModel:SetPrimaryKey({})
 
 	// //Fazendo o relacionamento
@@ -102,11 +101,11 @@ Static Function ModelDef()
 	aAdd(aRelation2, {"ZPC_REALCE", "ZPB_REALCE"})
 
 	// relacionamento entre filho2 e filho3 (ZPC->ZPD)
-	aAdd(aRelation3, {FWxFilial("ZPD"), FWxFilial("ZPC")})
-	aAdd(aRelation3, {"ZPD_DOCFL", "ZPC_DOCFL"})
-	aAdd(aRelation3, {"ZPD_VER", "ZPC_VER"})
-	aAdd(aRelation3, {"ZPD_DOCBML", "ZPC_DOCBML"})
-	aAdd(aRelation3, {"ZPD_REALCE", "ZPC_REALCE"})
+	// aAdd(aRelation3, {FWxFilial("ZPD"), FWxFilial("ZPC")})
+	// aAdd(aRelation3, {"ZPD_DOCFL", "ZPC_DOCFL"})
+	// aAdd(aRelation3, {"ZPD_VER", "ZPC_VER"})
+	// aAdd(aRelation3, {"ZPD_DOCBML", "ZPC_DOCBML"})
+	// aAdd(aRelation3, {"ZPD_REALCE", "ZPC_REALCE"})
 
 Return oModel
 
@@ -114,10 +113,10 @@ Static Function ViewDef()
 	Local oModel := FWLoadModel("RPCPA007")
 
 	// , cTabFilho2, {|cCampo2|   AllTrim(cCampo2) $ "ZPC_FILBML,ZPC_DOCBML,ZPC_REALCE,ZPC_QTD" }      
-	Local oStruPai := FWFormStruct(2, cTabPai, {|cCampo|   AllTrim(cCampo) $ "ZPA_DOCFL,ZPA_VER,ZPA_ANO,ZPA_MES,ZPA_PROD,ZPA_SLDATU" })		// ZPA
-	Local oStruFilho := FWFormStruct(2, cTabFilho, {|cCampo1|   AllTrim(cCampo1) $ "ZPB_DOCBML, ZPB_REALCE, ZPB_TEOR, ZPB_REC, ZPB_METAL, ZPB_QTDVLR ,ZPB_SLDREM" })	// ZPB "ZPB_DOCBML, ZPB_REALCE, ZPB_TEOR, ZPB_REC, ZPB_METAL, ZPB_QTDMAS, ZPB_SLDREM"
-    Local oStruZPC := FWFormStruct(2, cTabFilho2, {|cCampo2|   AllTrim(cCampo2) $ "ZPC_REALCE, ZPC_QTLD01, ZPC_QTLD02, ZPC_QTLD03, ZPC_QTLD04, ZPC_QTLD05, ZPC_QTLD06, ZPC_QTLD07, ZPC_QTLD08, ZPC_QTLD09, ZPC_QTLD10, ZPC_QTLD11, ZPC_QTLD12, ZPC_QTLD13, ZPC_QTLD14, ZPC_QTLD15, ZPC_QTLD16, ZPC_QTLD17, ZPC_QTLD18, ZPC_QTLD19, ZPC_QTLD20, ZPC_QTLD21, ZPC_QTLD22, ZPC_QTLD23, ZPC_QTLD24, ZPC_QTLD25, ZPC_QTLD26, ZPC_QTLD27, ZPC_QTLD28, ZPC_QTLD29, ZPC_QTLD30, ZPC_QTLD31"})	// ZPC
-	Local oStruZPD := FWFormStruct(2, cTabFilho3, {|cCampo3|   AllTrim(cCampo3) $ "ZPD_REALCE, ZPD_SEQ, ZPD_ATIV, ZPD_UM, ZPD_RECURS, ZPD_QTED01, ZPD_QTED02, ZPD_QTED03, ZPD_QTED04, ZPD_QTED05, ZPD_QTED06, ZPD_QTED07, ZPD_QTED08, ZPD_QTED09, ZPD_QTED10, ZPD_QTED11, ZPD_QTED12, ZPD_QTED13, ZPD_QTED14, ZPD_QTED15, ZPD_QTED16, ZPD_QTED17, ZPD_QTED18, ZPD_QTED19, ZPD_QTED20, ZPD_QTED21, ZPD_QTED22, ZPD_QTED23, ZPD_QTED24, ZPD_QTED25, ZPD_QTED26, ZPD_QTED27, ZPD_QTED28, ZPD_QTED29, ZPD_QTED30, ZPD_QTED31, ZPD_QTDVLR, ZPD_QTDEST"})	// ZPD
+	Local oStruPai := FWFormStruct(2, cTabPai)		// ZPA
+	Local oStruFilho := FWFormStruct(2, cTabFilho)	// ZPB
+    Local oStruZPC := FWFormStruct(2, cTabFilho2)	// ZPC
+	//Local oStruZPD := FWFormStruct(2, cTabFilho3)	// ZPD
 
 	//Cria a visualizacao do cadastro
 	oView := FWFormView():New()
@@ -126,23 +125,23 @@ Static Function ViewDef()
 	oView:AddField("VIEW_ZPA", oStruPai, "ZPAMASTER")
 	oView:AddGrid("VIEW_ZPB",  oStruFilho,  "ZPBDETAIL")
 	oView:AddGrid("VIEW_ZPC",  oStruZPC,  "ZPCDETAIL")
-	oView:AddGrid("VIEW_ZPD", oStruZPD, "ZPDDETAIL")
+	//oView:AddGrid("VIEW_ZPD", oStruZPD, "ZPDDETAIL")
 
 	//Partes da tela
 	oView:CreateHorizontalBox("CABEC", 25)	// Cabecalho (ZPA)
 	oView:CreateHorizontalBox("GRID", 25)	// Grid ZPB
 	oView:CreateHorizontalBox("GRID1", 25)	// Grid ZPC
-	oView:CreateHorizontamBox("GRID2", 25)	// Grid ZPD
+	//oView:CreateHorizontamBox("GRID2", 25)	// Grid ZPD
 
 	oView:SetOwnerView("VIEW_ZPA", "CABEC")
 	oView:SetOwnerView("VIEW_ZPB", "GRID")
     oView:SetOwnerView("VIEW_ZPC", "GRID1")
-	oView:SetOwnerView("VIEW_ZPD", "GRID2")
+	//oView:SetOwnerView("VIEW_ZPD", "GRID2")
 
 	oView:EnableTitleView("VIEW_ZPA", "Documento ")	// Titulo View Cabecalho (ZPA)
-	oView:EnableTitleView("VIEW_ZPB", "Budget Mensais Lavra (Lista que sera planejado)") // Título View GRID (ZPB)
-	oView:EnableTitleView("VIEW_ZPC", "Plan.Massa Producao") // Título View GRID1 (ZPC)
-	oView:EnableTitleView("VIEW_ZPD", "Plan. Atividade/Serviço") // Título View GRID2 (ZPD)
+	oView:EnableTitleView("VIEW_ZPB", "Budget Mensais Lavra (Lista que sera planejado)") // TÃ­tulo View GRID (ZPB)
+	oView:EnableTitleView("VIEW_ZPC", "Plan.Massa Producao") // TÃ­tulo View GRID1 (ZPC)
+	//oView:EnableTitleView("VIEW_ZPD", "Plan. Atividade/ServiÃ§o") // TÃ­tulo View GRID2 (ZPD)
 
 	//Adicionando campo incremental na grid
 	// ?
